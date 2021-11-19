@@ -23,6 +23,8 @@ gem 'jbuilder', '~> 2.7'
 # Windows does not include zoneinfo files, so bundle the tzinfo-data gem
 gem 'tzinfo-data', platforms: %i[mingw mswin x64_mingw jruby]
 
+gem 'hotwire-rails'
+
 # Reduces boot times through caching; required in config/boot.rb
 gem 'bootsnap', '>= 1.4.4', require: false
 
@@ -58,3 +60,5 @@ group :test do
   gem 'rspec-rails', '~> 5.0'
   gem 'selenium-webdriver', '~> 4.0'
 end
+
+gem "webpacker", "~> 5.4"
