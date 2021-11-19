@@ -53,8 +53,8 @@ end
 
 group :test do
   gem 'capybara', '~> 3.36'
-  gem 'rspec-rails', '~> 5.0'
-  gem 'selenium-webdriver', '~> 4.0'
   gem 'fabrication'
   gem 'faker'
+  gem 'rspec-rails', '~> 5.0'
+  gem 'selenium-webdriver', '~> 4.0'
 end
