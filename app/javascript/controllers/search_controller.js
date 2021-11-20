@@ -1,16 +1,15 @@
 import Rails from '@rails/ujs'
 import { Controller } from "@hotwired/stimulus"
+import { debounce } from 'lodash'
 
 export default class extends Controller {
   static targets = ['form']
 
-  connect() {
-    console.log(this.element)
-    console.log(this.formTarget)
+  initialize() {
+    this.search = debounce(this._performSearch, 500)
   }
 
-  search() {
-    console.log(Rails)
+  _performSearch() {
     Rails.fire(this.formTarget, 'submit')
   }
 }

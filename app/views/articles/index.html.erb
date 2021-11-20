@@ -1,6 +1,7 @@
 <div id='search-form' data-controller='search'>
-  <%= form_with url: articles_path, data: { 'remote': true, 'search-target': 'form', 'turbo-frame': 'articles' } do |form| %>
-    <%= form.search_field :query, id: :query, data: { 'action': 'keyup->search#search' } %>
+  <%= form_with url: articles_path, method: :get, data: { 'remote': true, 'search-target': 'form', 'turbo-frame': 'articles' } do |form| %>
+    <%= form.search_field :query, id: :query, placeholder: 'Search articles',
+                          data: { 'action': 'keyup->search#search' } %>
   <% end %>
 </div>
 
