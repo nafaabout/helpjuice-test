@@ -2,6 +2,6 @@
 
 Fabricator(:search) do
   query      { Faker::Book.title }
-  status     { Search.statuses.values.sample }
+  status     :incomplete
   user
 end

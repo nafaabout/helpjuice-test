@@ -39,7 +39,7 @@ module Finders
       return false if previous_search.blank?
 
       same_query?(previous_search.query, query) ||
-        previous_search.updated_since?(10.seconds.ago)
+        previous_search.updated_since?(5.seconds.ago)
     end
 
     def same_query?(previous_query, query)
