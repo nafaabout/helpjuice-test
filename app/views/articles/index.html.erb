@@ -1,12 +1,14 @@
 <div id='search-form' data-controller='search'>
-  <%= form_with url: articles_path, method: :get, data: { 'remote': true, 'search-target': 'form', 'turbo-frame': 'articles' } do |form| %>
+  <%= form_with url: search_articles_path, method: :get, data: { 'remote': true, 'search-target': 'form', 'turbo-frame': 'articles' } do |form| %>
     <%= form.search_field :query, id: :query, placeholder: 'Search articles',
                           data: { 'action': 'keyup->search#search' } %>
   <% end %>
 </div>
 
 <%= turbo_frame_tag("articles") do %>
-  <div id="articles">
-    <%= render @articles %>
-  </div>
+  <% if @articles.present? %>
+    <div id="articles">
+      <%= render @articles %>
+    </div>
+  <% end %>
 <% end %>

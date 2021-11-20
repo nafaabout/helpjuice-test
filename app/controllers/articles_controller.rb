@@ -1,11 +1,21 @@
 # frozen_string_literal: true
 
 class ArticlesController < ApplicationController
-  def index
+  def index; end
+
+  def search
     @articles = if params[:query].present?
-                  Article.where('title ilike ?', params[:query].concat('%'))
+                  articles_finder.save_search(params[:query])
+                  articles_finder.search(params[:query])
                 else
                   []
                 end
+    render :index
+  end
+
+  private
+
+  def articles_finder
+    @articles_finder ||= Finders::Articles.new(current_user)
   end
 end
