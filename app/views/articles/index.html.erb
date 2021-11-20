@@ -1,2 +1,11 @@
-<h1>Articles#index</h1>
-<p>Find me in app/views/articles/index.html.erb</p>
+<div id='search-form' data-controller='search'>
+  <%= form_with url: articles_path, data: { 'remote': true, 'search-target': 'form', 'turbo-frame': 'articles' } do |form| %>
+    <%= form.search_field :query, id: :query, data: { 'action': 'keyup->search#search' } %>
+  <% end %>
+</div>
+
+<%= turbo_frame_tag("articles") do %>
+  <div id="articles">
+    <%= render @articles %>
+  </div>
+<% end %>
