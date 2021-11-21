@@ -18,13 +18,13 @@ gem 'puma', '~> 5.0'
 gem 'jbuilder', '~> 2.7'
 
 # Use Redis adapter to run Action Cable in production
-gem "redis", "~> 4.0"
+gem 'redis', '~> 4.0'
 
 # Windows does not include zoneinfo files, so bundle the tzinfo-data gem
 gem 'tzinfo-data', platforms: %i[mingw mswin x64_mingw jruby]
 
 gem 'hotwire-rails'
-gem "webpacker", "~> 5.4"
+gem 'webpacker', '~> 5.4'
 
 # Reduces boot times through caching; required in config/boot.rb
 gem 'bootsnap', '>= 1.4.4', require: false
@@ -41,6 +41,7 @@ gem 'bootsnap', '>= 1.4.4', require: false
 group :development, :test do
   # Start debugger with binding.b [https://github.com/ruby/debug]
   gem 'debug', '>= 1.0.0', platforms: %i[mri mingw x64_mingw]
+  gem 'pry-rails'
 end
 
 group :development do
@@ -58,7 +59,7 @@ group :test do
   gem 'capybara', '~> 3.36'
   gem 'fabrication'
   gem 'faker'
+  gem 'rails-controller-testing'
   gem 'rspec-rails', '~> 5.0'
   gem 'selenium-webdriver', '~> 4.0'
 end
-
