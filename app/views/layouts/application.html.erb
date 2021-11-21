@@ -11,8 +11,17 @@
 
   <body>
     <nav>
-      <%= link_to "Searches", searches_path %>
+      <% if !current_page?('articles', 'index') %>
+        <li>
+          <%= link_to 'Articles', articles_path %>
+        </li>
+      <% end %>
+      <% if !current_page?('searches', 'index')%>
+        <li>
+          <%= link_to 'Searches', searches_path %>
+        </li>
+      <% end %>
     </nav>
-    <%= yield %>
+  <%= yield %>
   </body>
 </html>
