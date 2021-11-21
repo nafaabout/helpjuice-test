@@ -2,6 +2,6 @@
 
 class SearchesController < ApplicationController
   def index
-    @searches = Search.complete
+    @searches = Search.complete.order(:updated_at)
   end
 end
