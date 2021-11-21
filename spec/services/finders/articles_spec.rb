@@ -4,7 +4,8 @@ require 'rails_helper'
 
 RSpec.describe Finders::Articles, type: :service do
   subject(:articles_finder) { described_class.new(user) }
-  let!(:user) { Fabricate(:user) }
+  let!(:user) { Fabricate(:user, role: user_role) }
+  let(:user_role) { :guest }
 
   describe '#search' do
     let(:query) { matching_articles.first.title[0..5] }
@@ -17,6 +18,15 @@ RSpec.describe Finders::Articles, type: :service do
   end
 
   describe '#save_search' do
+    context 'When user is admin' do
+      let(:user_role) { :admin }
+      let(:query) { 'What is a galaxy?' }
+
+      it 'does not save searches' do
+        expect { articles_finder.save_search(query) }.to_not change { Search.count }
+      end
+    end
+
     context 'WHEN there is no previous search' do
       before do
         user.searches.destroy_all

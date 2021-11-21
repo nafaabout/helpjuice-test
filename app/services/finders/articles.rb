@@ -13,7 +13,7 @@ module Finders
     end
 
     def save_search(query)
-      return if query.blank?
+      return if query.blank? || user.admin?
 
       status = complete_query?(query) ? :complete : :incomplete
 
