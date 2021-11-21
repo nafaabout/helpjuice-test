@@ -2,6 +2,8 @@
 
 class SearchesController < ApplicationController
   def index
-    @searches = Search.complete.order(:updated_at)
+    authorize Search
+
+    @searches = policy_scope(Search).complete
   end
 end

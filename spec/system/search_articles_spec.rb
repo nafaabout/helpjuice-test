@@ -10,7 +10,7 @@ RSpec.describe 'Search Articles', type: :system do
   it 'shows a search input on the root page' do
     visit root_path
 
-    expect(page).to have_selector('#search-form input[type=text]#query')
+    expect(page).to have_selector('#search-form input[type=search]#query')
   end
 
   context 'when user types a search query' do
