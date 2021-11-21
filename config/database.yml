@@ -81,6 +81,4 @@ test:
 #
 production:
   <<: *default
-  database: helpjuice_test_production
-  username: helpjuice_test
-  password: <%= ENV["HELPJUICE_TEST_DATABASE_PASSWORD"] %>
+  url: <%= ENV["DATABASE_URL"] %>
