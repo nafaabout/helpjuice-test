@@ -44,6 +44,17 @@ RSpec.describe 'SearchAnalytics', type: :system do
     let!(:complete_searches) { Fabricate.times(5, :search, status: :complete) }
     let!(:incomplete_searches) { Fabricate.times(5, :search, status: :incomplete) }
 
+    it 'should exclude duplicates' do
+      Fabricate(:search, query: complete_searches.first.query, status: :complete)
+
+      visit root_path
+      click_on 'Searches'
+
+      complete_searches.each do |search|
+        expect(page).to have_text(search.query).once
+      end
+    end
+
     it 'can see all complete searches' do
       visit root_path
       click_on 'Searches'
