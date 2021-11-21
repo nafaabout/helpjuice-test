@@ -17,64 +17,126 @@ RSpec.describe Finders::Articles, type: :service do
   end
 
   describe '#save_search' do
-    let(:query) { Faker::Lorem.sentence(word_count: 6) }
-
-    context 'when there is no past search' do
-      it 'creates a new incomplete search' do
-        expect { articles_finder.save_search(query) }.to change { Search.count }.to(1)
-        search = Search.last
-        expect(search).to be_incomplete
-        expect(search.query).to eq(query)
-      end
-    end
-
-    context 'When query is longer and previous query matches the start of the query' do
-      let!(:previous_search) { Fabricate(:search, user: user, query: query[0..-5], status: :incomplete) }
-
-      it 'does not create a new search' do
-        expect { articles_finder.save_search(query) }.to_not change { Search.count }
+    context 'WHEN there is no previous search' do
+      before do
+        user.searches.destroy_all
       end
 
-      it 'updates the previous search query' do
-        expect { articles_finder.save_search(query) }.to change { previous_search.reload.query }.to(query)
-      end
-    end
+      context 'AND the query ends with a punctuation' do
+        let(:query) { 'Who is jinkies khan?' }
 
-    context 'When query is shorter and query matches the start of the previous query' do
-      let!(:previous_search) { Fabricate(:search, user: user, status: :incomplete) }
-      let(:query) { previous_search.query[0..-5] }
-
-      it 'does not create a new search' do
-        expect { articles_finder.save_search(query) }.to_not change { Search.count }
-      end
-
-      it 'updates the previous search query' do
-        expect { articles_finder.save_search(query) }.to change { previous_search.reload.query }.to(query)
-      end
-    end
-
-    context 'When the previous search query does not match the start of the query' do
-      context 'AND previous search have not been updated for more than 5 seconds' do
-        let!(:previous_search) do
-          Fabricate(:search, user: user, query: 'This is a query',
-                             created_at: 6.seconds.ago, updated_at: 6.seconds.ago, status: :incomplete)
-        end
-        let(:query) { 'And this is another one' }
-
-        it 'sets the previous search as complete' do
-          expect { articles_finder.save_search(query) }.to change { previous_search.reload.complete? }.to(true)
+        it 'creates a new complete search' do
+          expect do
+            articles_finder.save_search(query)
+          end.to change { user.searches.complete.where(query: query).count }.to(1)
         end
       end
 
-      context 'AND the last time since previous search has been updated is less than 5 seconds' do
-        let!(:previous_search) do
-          Fabricate(:search, user: user, query: 'This is a query',
-                             created_at: 4.seconds.ago, updated_at: 4.seconds.ago, status: :incomplete)
-        end
-        let(:query) { 'And this is another one' }
+      context 'AND the query does not end with a punctuation' do
+        let(:query) { 'What is this' }
 
-        it 'does not set the previous search as complete' do
-          expect { articles_finder.save_search(query) }.to_not change { previous_search.reload.complete? }
+        it 'creates a new incomplete search' do
+          expect do
+            articles_finder.save_search(query)
+          end.to change { user.searches.incomplete.where(query: query).count }.to(1)
+        end
+      end
+    end
+
+    context 'WHEN there is a previous search' do
+      let!(:previous_search) do
+        Fabricate(:search, user: user, query: previous_search_query, status: previous_search_status)
+      end
+      let(:previous_search_status) { :incomplete }
+
+      context 'AND previous query matches the start of the query' do
+        let(:query) { 'What are the benefits of cucumber' }
+        let(:previous_search_query) { query[0..-5] }
+
+        context 'AND the query is longer' do
+          it 'does not create a new search' do
+            expect { articles_finder.save_search(query) }.to_not change { user.searches.count }
+          end
+
+          it 'updates the previous search query' do
+            expect { articles_finder.save_search(query) }.to change { previous_search.reload.query }.to(query)
+          end
+        end
+
+        context 'AND query is shorter' do
+          let(:query) { 'What are the benefits of ' }
+          let(:previous_search_query) { "#{query} cucumber" }
+
+          it 'does not create a new search' do
+            expect { articles_finder.save_search(query) }.to_not change { user.searches.count }
+          end
+
+          it 'updates the previous search query' do
+            expect { articles_finder.save_search(query) }.to change { previous_search.reload.query }.to(query)
+          end
+        end
+
+        context 'AND the query is complete' do
+          let(:query) { "#{previous_search.query} cucumber?" }
+          let(:previous_search_query) { 'What are the benefits of' }
+          let(:previous_search_status) { :incomplete }
+
+          it 'sets the previous_search status as complete' do
+            expect { articles_finder.save_search(query) }.to change { previous_search.reload.status }.to('complete')
+          end
+        end
+
+        context 'AND the query is incomplete' do
+          let(:query) { previous_search.query.chop }
+          let(:previous_search_query) { 'What are the benefits of cucumber?' }
+          let(:previous_search_status) { :complete }
+
+          it 'sets the previous_search status as incomplete' do
+            expect { articles_finder.save_search(query) }.to change {
+                                                               previous_search.reload.status
+                                                             }.to('incomplete')
+          end
+        end
+      end
+
+      context 'AND the previous query does not match the start of the query' do
+        context 'AND the previous search is incomplete' do
+          let(:query) { 'Why do you use Ruby' }
+          let(:previous_search_query) { 'Why Ruby is great' }
+          let(:previous_search_status) { :incomplete }
+
+          it 'updates the query of the previous search' do
+            expect { articles_finder.save_search(query) }.to change { previous_search.reload.query }.to(query)
+          end
+        end
+
+        context 'AND the previous search is complete' do
+          let(:previous_search_query) { 'Why Ruby is great?' }
+          let(:previous_search_status) { :complete }
+
+          context 'AND the query is incomplete' do
+            let(:query) { 'Why do you use Ruby' }
+
+            it 'creates a new incomplete search' do
+              expect { articles_finder.save_search(query) }.to change { user.searches.incomplete.count }.by(1)
+            end
+
+            it 'does not update the previous search' do
+              expect { articles_finder.save_search(query) }.to_not change { previous_search.reload.query }
+            end
+          end
+
+          context 'AND the query is complete' do
+            let(:query) { 'Why do you use Ruby?' }
+
+            it 'creates a new complete search' do
+              expect { articles_finder.save_search(query) }.to change { user.searches.complete.count }.by(1)
+            end
+
+            it 'does not update the previous search' do
+              expect { articles_finder.save_search(query) }.to_not change { previous_search.reload.query }
+            end
+          end
         end
       end
     end

@@ -15,31 +15,25 @@ module Finders
     def save_search(query)
       return if query.blank?
 
-      if same_search?(query)
-        previous_search.update(query: query)
+      status = complete_query?(query) ? :complete : :incomplete
+
+      if same_search?(query) || previous_search&.incomplete?
+        previous_search.update(query: query, status: status)
       else
-        complete_previous_search
-        @previous_search = user.searches.create(query: query)
+        @previous_search = user.searches.create(query: query, status: status)
       end
     end
 
     def previous_search
-      @previous_search ||= user.searches.order(:created_at).incomplete.last
+      @previous_search ||= user.searches.order(:created_at).last
     end
 
     private
 
-    def complete_previous_search
-      return if previous_search.blank?
-
-      previous_search.complete!
-    end
-
     def same_search?(query)
       return false if previous_search.blank?
 
-      same_query?(previous_search.query, query) ||
-        previous_search.updated_since?(5.seconds.ago)
+      same_query?(previous_search.query, query)
     end
 
     def same_query?(previous_query, query)
@@ -50,6 +44,10 @@ module Finders
 
     def remove_non_word_chars(query)
       query.gsub(/\W/, '')
+    end
+
+    def complete_query?(query)
+      query.match?(/[.?!]$/)
     end
   end
 end
