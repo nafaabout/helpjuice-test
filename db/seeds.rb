@@ -8,4 +8,6 @@
 #   movies = Movie.create([{ name: "Star Wars" }, { name: "Lord of the Rings" }])
 #   Character.create(name: "Luke", movie: movies.first)
 
-User.create(username: 'admin', password: '12345')
+puts '-- Creating *admin* user'
+admin = User.find_or_initialize_by(username: :admin)
+admin.update(password: '12345', role: :admin)
