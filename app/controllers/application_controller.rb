@@ -3,6 +3,7 @@
 class ApplicationController < ActionController::Base
   include Pundit
 
+  helper_method :current_user
   attr_reader :current_user
 
   before_action :set_user

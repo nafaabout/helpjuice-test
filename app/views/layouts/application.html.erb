@@ -21,6 +21,17 @@
           <%= link_to 'Searches', searches_path %>
         </li>
       <% end %>
+
+      <% if logged_in? %>
+        <li>
+          <span>Logged in as <b>Admin</b></span>
+          <%= link_to 'Logout', logout_path, method: :delete %>
+        </li>
+      <% else %>
+        <li>
+          <%= link_to 'Login', login_path %>
+        </li>
+      <% end %>
     </nav>
   <%= yield %>
   </body>
