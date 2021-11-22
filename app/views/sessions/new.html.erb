@@ -1,11 +1,22 @@
-<%= form_with model: @user, url: login_path do |form| %>
-  <% if flash[:alert].present? %>
-    <div class="alert">
-      <%= flash[:alert] %>
+<%= form_with model: @user, url: login_path, class: 'w-full' do |form| %>
+  <div class="flex flex-col items-start">
+    <% if flash[:alert].present? %>
+      <div class="alert">
+        <%= flash[:alert] %>
+      </div>
+    <% end %>
+    <div class="m-2 w-1/2">
+      <%=  form.text_field :username, placeholder: 'Username', class: 'border border-gray-300 focus:ring-2 focus:ring-gray-200 shadow focus:outline-none focus:border-gray-300 w-full rounded'  %>
     </div>
-  <% end %>
-  <%=  form.text_field :username %>
-  <%=  form.password_field :password %>
+    <div class="m-2 w-1/2">
+      <%=  form.password_field :password, placeholder: 'Password', class: 'border border-gray-300 focus:ring-2 focus:ring-gray-200 shadow focus:outline-none focus:border-gray-300 w-full rounded' %>
+    </div>
 
-  <%= form.submit 'Login' %>
+    <div class="m-2 mt-3 p-2 flex flex-1 bg-gray-400 hover:bg-gray-600 text-white hover:text-gray-200 rounded">
+      <%= form.button class: 'flex' do %>
+        <span>Login</span>
+        <%= heroicon 'login', variant: :outline, options: { class: "ml-2 w-6" } %>
+      <% end %>
+    </div>
+  </div>
 <% end %>

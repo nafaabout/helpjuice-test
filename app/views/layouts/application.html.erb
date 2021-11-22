@@ -11,7 +11,7 @@
     <%= javascript_pack_tag "application" %>
   </head>
 
-  <body>
+  <body class='h-full'>
     <nav class='bg-gray-800 flex justify-center shadow-lg w-full'>
       <div class='h-16 flex w-1/2 items-center justify-between'>
         <div id='search-form' data-controller='search' class='w-1/2'>
@@ -53,7 +53,7 @@
         </div>
       </div>
     </nav>
-    <main class="container mx-auto mt-28 px-5 flex">
+    <main class="container w-1/2 mx-auto mt-20 flex">
       <%= yield %>
     </main>
   </body>
