@@ -1,14 +1,17 @@
-<%= turbo_frame_tag("articles") do %>
-  <div id="articles">
+<%= turbo_frame_tag("articles", class: 'w-full') do %>
+  <div id="articles w-full">
     <% if @articles.present? %>
+      <h1 class='text-2xl m-3 mb-5 pl-0 p-3 border-b border-gray-500 w-1/4'>
+        Results for <%= params[:query].inspect %>
+      </h1>
       <%= render @articles %>
-    <% elsif params[:query].present? %>
-      <div>
-        No results for this search "<%= params[:query] %>"
-      </div>
     <% else %>
-      <div>
-        You can search for articles from the box at the top..
+      <div class="text-gray-600 text-lg">
+        <% if params[:query].present? %>
+          No results for this search "<%= params[:query] %>"
+        <% else %>
+          You can search for articles from the box at the top..
+        <% end %>
       </div>
     <% end %>
   </div>

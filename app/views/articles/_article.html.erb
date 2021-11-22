@@ -1,5 +1,9 @@
 <%= turbo_frame_tag(dom_id(article)) do %>
-  <div class="article">
-    <%= article.title %>
+  <div class="article pl-0 p-2 text-lg text-gray-600">
+    <div class="p-3">
+      <%= article.title %>
+    </div>
+
+    <hr class='ml-3 w-1/5 border-b border-gray-300'>
   </div>
 <% end %>
