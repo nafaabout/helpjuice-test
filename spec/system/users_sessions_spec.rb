@@ -16,7 +16,7 @@ RSpec.describe 'UsersSessions', type: :system do
     fill_in 'user[username]', with: username
     fill_in 'user[password]', with: password
 
-    click_on 'Login'
+    click_button 'Login'
   end
 
   describe 'User login' do
@@ -24,8 +24,8 @@ RSpec.describe 'UsersSessions', type: :system do
       it 'redirects to root page and shows Logout link' do
         log_user_in(user.username, user.password)
 
-        expect(page).to have_content('Logged in as Admin')
-        expect(page).to have_content('Logout')
+        expect(page).to have_content('Admin')
+        expect(page).to have_link(href: logout_path)
       end
     end
 
@@ -44,7 +44,7 @@ RSpec.describe 'UsersSessions', type: :system do
     it 'redirects to root page and show login link' do
       log_user_in(user.username, user.password)
 
-      click_on 'Logout'
+      click_link href: logout_path
 
       expect(page).to have_selector('a', text: 'Login')
       expect(page.current_path).to eq root_path
