@@ -1,7 +1,7 @@
 <%= form_with model: @user, url: login_path, class: 'w-full' do |form| %>
   <div class="flex flex-col items-start">
     <% if flash[:alert].present? %>
-      <div class="alert">
+      <div class="alert p-2 text-red-400">
         <%= flash[:alert] %>
       </div>
     <% end %>
