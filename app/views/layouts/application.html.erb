@@ -4,35 +4,57 @@
     <title>HelpjuiceTest</title>
     <%= csrf_meta_tags %>
     <%= csp_meta_tag %>
+    <%= stylesheet_link_tag "inter-font", "data-turbo-track": "reload" %>
+    <%= stylesheet_link_tag "tailwind", "data-turbo-track": "reload" %>
 
     <%= stylesheet_link_tag "application" %>
     <%= javascript_pack_tag "application" %>
   </head>
 
   <body>
-    <nav>
-      <% if !current_page?('articles', 'index') %>
-        <li>
-          <%= link_to 'Articles', articles_path %>
-        </li>
-      <% end %>
-      <% if !current_page?('searches', 'index')%>
-        <li>
-          <%= link_to 'Searches', searches_path %>
-        </li>
-      <% end %>
+    <nav class='bg-gray-800 flex justify-center shadow-lg w-full'>
+      <div class='h-16 flex w-1/2 items-center justify-between'>
+        <div id='search-form' data-controller='search' class='w-1/2'>
+          <%= form_with url: search_articles_path, method: :get, data: { local: current_page?('articles', 'index'), 'search-target': 'form', 'turbo-frame': 'articles' } do |form| %>
+            <div class="relative w-full text-gray-500 focus-within:text-gray-400">
+              <span class="absolute inset-y-0 left-0 flex items-center pl-2">
+                <button type="submit" class="p-1 focus:outline-none focus:shadow-outline">
+                  <svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" class="w-6 h-6"><path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+                </button>
+              </span>
+              <%= form.search_field :query, autofocus: params[:query].present?, onfocus: "var v = this.value; this.value = ''; this.value = v",
+                value: params[:query], id: :query, class: "pl-10 py-2 w-full text-sm bg-transparent border-none focus:bg-gray-500 focus:ring-0", placeholder: 'Search articles',
+                data: { 'action': 'keyup->search#search' } %>
+            </div>
+          <% end %>
+        </div>
+        <div class="links flex text-white">
+          <div class="mr-2 p-2 rounded hover:text-gray-200 hover:bg-gray-500">
+            <%= link_to 'Searches', searches_path %>
+          </div>
 
-      <% if logged_in? %>
-        <li>
-          <span>Logged in as <b>Admin</b></span>
-          <%= link_to 'Logout', logout_path, method: :delete %>
-        </li>
-      <% else %>
-        <li>
-          <%= link_to 'Login', login_path %>
-        </li>
-      <% end %>
+          <div class="flex bg-gray-500 hover:bg-gray-600 hover:text-gray-200 rounded">
+            <% if logged_in? %>
+              <%= link_to logout_path, method: :delete, class: 'hover:text-gray-200' do %>
+                <div class="flex items-center p-2">
+                  <b>Admin</b>
+                  <%= heroicon 'logout', variant: :outline, options: { class: "ml-2 w-6" } %>
+                </div>
+              <% end %>
+            <% else %>
+              <%= link_to login_path do %>
+                <div class="flex items-center p-2">
+                  <span>Login</span>
+                  <%= heroicon 'login', variant: :outline, options: { class: "ml-2 w-6" } %>
+                </div>
+              <% end %>
+            <% end %>
+          </div>
+        </div>
+      </div>
     </nav>
-  <%= yield %>
+    <main class="container mx-auto mt-28 px-5 flex">
+      <%= yield %>
+    </main>
   </body>
 </html>

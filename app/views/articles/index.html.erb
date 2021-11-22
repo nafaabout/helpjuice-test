@@ -1,14 +1,15 @@
-<div id='search-form' data-controller='search'>
-  <%= form_with url: search_articles_path, method: :get, data: { 'remote': true, 'search-target': 'form', 'turbo-frame': 'articles' } do |form| %>
-    <%= form.search_field :query, id: :query, placeholder: 'Search articles',
-                          data: { 'action': 'keyup->search#search' } %>
-  <% end %>
-</div>
-
 <%= turbo_frame_tag("articles") do %>
-  <% if @articles.present? %>
-    <div id="articles">
+  <div id="articles">
+    <% if @articles.present? %>
       <%= render @articles %>
-    </div>
-  <% end %>
+    <% elsif params[:query].present? %>
+      <div>
+        No results for this search "<%= params[:query] %>"
+      </div>
+    <% else %>
+      <div>
+        You can search for articles from the box at the top..
+      </div>
+    <% end %>
+  </div>
 <% end %>

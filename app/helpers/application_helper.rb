@@ -2,7 +2,7 @@
 
 module ApplicationHelper
   def logged_in?
-    current_user.admin?
+    current_user&.admin?
   end
 
   def current_page?(controller, action)
