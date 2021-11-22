@@ -4,12 +4,14 @@
     Searches
   </h1>
 
-  <div id="searches" class="m-3 mb-5 pl-0 p-3 w-1/4">
+  <div id="searches" class="m-3 mb-5 pl-0 p-3 w-full">
     <% if @searches.present? %>
       <% @searches.each do |search| %>
         <div class="search mb-3 pl-0 p-2 text-lg text-gray-600">
-          <%= search.query %>
-          <hr class='ml-0 m-1 border-b border-gray-300'>
+          <span class="block mb-2 ">
+            <%= search.query %>
+          </span>
+          <hr class='ml-0 m-1 w-1/5 border-b border-gray-300'>
         </div>
       <% end %>
     <% else %>
