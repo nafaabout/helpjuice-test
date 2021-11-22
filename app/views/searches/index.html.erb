@@ -1,7 +1,14 @@
-<h1>Searches</h1>
+<div class="flex flex-col w-full">
+  <h1 class='text-2xl m-3 mb-5 pl-0 p-3 border-b border-gray-500 w-1/5'>
+    Searches
+  </h1>
 
-<ul id="searches">
-  <% @searches.each do |search| %>
-    <li class="search"><%= search.query %></li>
-  <% end %>
-</ul>
+  <div id="searches" class="m-3 mb-5 pl-0 p-3 w-1/4">
+    <% @searches.each do |search| %>
+      <div class="search mb-3 pl-0 p-2 text-lg text-gray-600">
+        <%= search.query %>
+        <hr class='ml-0 m-1 border-b border-gray-300'>
+      </div>
+    <% end %>
+  </div>
+</div>
